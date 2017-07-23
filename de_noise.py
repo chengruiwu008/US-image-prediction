@@ -39,8 +39,8 @@ def get_train_batch(noise=500):
     n_pic = ran
     # print(n_pic)
     for i in range(10):
-        frame_0 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic[i]), 0)
-        frame_0 = add_noise(frame_0, n = noise)
+        frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic[i]), 0)
+        #frame_0 = add_noise(frame_0, n = noise)
         frame_0 = cv2.resize(frame_0, (24, 24))
         frame_0 = np.array(frame_0).reshape(-1)
         frame_0 = frame_0 / 255.0
@@ -63,8 +63,8 @@ def get_test_batch(noise=500):
     n_pic = ran
     # print(n_pic)
     for i in range(10):
-        frame_0 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic[i]), 0)
-        frame_0 = add_noise(frame_0, n = noise)
+        frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic[i]), 0)
+        #frame_0 = add_noise(frame_0, n = noise)
         frame_0 = cv2.resize(frame_0, (24, 24))
         frame_0 = np.array(frame_0).reshape(-1)
         frame_0 = frame_0 / 255.0
