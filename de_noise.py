@@ -148,7 +148,7 @@ outputs_ = tf.reshape(outputs_ , [-1,24,24,1])
 cost = tf.reduce_mean(tf.square(tf.reshape(targets_,[-1]) - tf.reshape(outputs_,[-1])))
 # loss = tf.nn.softmax_cross_entropy_with_logits(labels=targets_, logits=outputs_)
 # cost = tf.reduce_mean(loss)
-optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
+optimizer = tf.train.AdamOptimizer(0.0005).minimize(cost)
 #sess = tf.Session()
 
 #sess.run(tf.global_variables_initializer())
@@ -156,7 +156,7 @@ optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
-    for i in range(1000):
+    for i in range(10000):
         batch, img = get_train_batch()
         batch= np.reshape(batch,[-1, 24, 24, 1])
         img= np.reshape(img,[-1, 24, 24, 1])
