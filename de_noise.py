@@ -156,13 +156,15 @@ optimizer = tf.train.AdamOptimizer(0.0005).minimize(cost)
 with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
+    loss_history=[]
     for i in range(10000):
         batch, img = get_train_batch()
         batch= np.reshape(batch,[-1, 24, 24, 1])
         img= np.reshape(img,[-1, 24, 24, 1])
         sess.run(optimizer, feed_dict={inputs_: batch, targets_: img})
-        if i % 20 == 0:
+        if i % 200 == 0:
             batch_cost = sess.run(cost, feed_dict={inputs_: batch, targets_: img})
+            loss_history.append(batch_cost)
             print("Batch: {} ".format(i), "Training loss: {:.4f}".format(batch_cost))
     print("Optimization Finishes!")
 
@@ -171,7 +173,12 @@ with tf.Session() as sess:
     batch_ys = np.reshape(batch_ys, [-1, 24, 24, 1])
     image_p = sess.run(outputs_, feed_dict={inputs_: batch_xs, targets_: batch_ys})
     # image_p = gray2binary(image_p)
+    plt.figure(2)
+    plt.plot(loss_history)  # , '-o')
+    plt.xlabel('train')
+    plt.ylabel('loss')
 
+    plt.figure(1)
     f, a = plt.subplots(3, 10, figsize=(10, 3))
     for i in range(10):
         #a[0][i].imshow(np.reshape(ys_0[i], (LONGITUDE, LONGITUDE)))
@@ -180,5 +187,6 @@ with tf.Session() as sess:
         a[2][i].imshow(np.reshape(image_p[i], (24, 24)))
 
         # a[3][i].imshow(np.reshape(gray2binary(image_p[i]), (LONGITUDE, LONGITUDE)))
+
     plt.show()
 
