@@ -3,9 +3,9 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import cv2
 import scipy.signal as signal
-
-n_inputs=3*3*32
-n_hidden_units = 512
+lenth=96
+n_inputs=lenth*lenth*32//64
+n_hidden_units = 2048
 n_outputs=n_inputs
 
 def gray2binary(a):
@@ -20,66 +20,64 @@ def get_train_batch():
     #ran = np.random.randint(600,5800,size=100,dtype='int')
     image = []
     label = []
-    n_pic = np.random.randint(600,5800)
+    n_pic = np.random.randint(600,5996)
     # print(n_pic)
     for i in range(100):
         frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + i), 0)
         #frame_0 = add_noise(frame_0, n = noise)
-        frame_0 = cv2.resize(frame_0, (24, 24))
+        frame_0 = cv2.resize(frame_0, (lenth,lenth))
         frame_0 = np.array(frame_0).reshape(-1)
         frame_0 = frame_0 / 255.0
         image.append(frame_0)
         #print(np.shape(image))
     for i in range(10):
         frame_1 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic + 10*i +10), 0)
-        frame_1 = cv2.resize(frame_1, (24, 24))
+        frame_1 = cv2.resize(frame_1, (lenth,lenth))
         frame_1 = np.array(frame_1).reshape(-1)
         frame_1 = gray2binary(frame_1)
         label.append(frame_1)
     return np.array(image,dtype='float') , np.array(label,dtype='float')
 
-def get_test_batch():
-    image = []
+def get_test_batch(n_pic=600): # n_pic[600,5996]
+    image_out =[]
     label = []
-    us_0 = []
-    snake_0 = []
-    label_0=[]
-    n_pic = np.random.randint(5800,6000)
-    # print(n_pic)
-    for i in range(100):
-        frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic+i), 0)
-        frame_0 = cv2.resize(frame_0, (24, 24))
-        frame_0 = np.array(frame_0).reshape(-1)
-        frame_0 = frame_0 / 255.0
-        image.append(frame_0)
-        #print(np.shape(image))
-    for i in range(10):
-        frame_1 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic + 10*i +10), 0)
-        frame_1 = cv2.resize(frame_1, (24, 24))
+    for n in range(n_pic,n_pic+10):
+        image = []
+        for i in range(10):
+            frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n + i), 0)
+            frame_0 = cv2.resize(frame_0, (lenth, lenth))
+            frame_0 = np.array(frame_0).reshape(-1)
+            frame_0 = frame_0 / 255.0
+            image.append(frame_0)
+            # print(np.shape(image))
+        image_out.append(image)
+    image_out = np.reshape(image_out,[100,lenth*lenth])
+    for i in range(n_pic,n_pic+10):
+        frame_1 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (i+10), 0)
+        frame_1 = cv2.resize(frame_1, (lenth,lenth))
         frame_1 = np.array(frame_1).reshape(-1)
         frame_1 = gray2binary(frame_1)
         label.append(frame_1)
-    for i in range(10):
-        frame_4 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + 10*i +10), 0)
-        frame_4 = cv2.resize(frame_4, (24, 24))
-        frame_4 = np.array(frame_4).reshape(-1)
-        frame_4 = frame_4 / 255.0
-        label_0.append(frame_4)
-    for i in range(11):
-        frame_2 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + i), 0)
-        frame_2 = cv2.resize(frame_2, (24, 24))
-        frame_2 = np.array(frame_2).reshape(-1)
-        frame_2 = frame_2 / 255.0
-        us_0.append(frame_2)
-    for i in range(11):
-        frame_3 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic + i), 0)
-        frame_3 = cv2.resize(frame_3, (24, 24))
-        frame_3 = np.array(frame_3).reshape(-1)
-        frame_3 = gray2binary(frame_3)
-        snake_0.append(frame_3)
-    return np.array(image,dtype='float') , np.array(label,dtype='float'),\
-            np.array(us_0,dtype='float'), np.array(snake_0,dtype='float'),\
-            np.array(label_0,dtype='float')
+    # for i in range(10):
+    #     frame_4 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + 10*i +10), 0)
+    #     frame_4 = cv2.resize(frame_4, (lenth,lenth))
+    #     frame_4 = np.array(frame_4).reshape(-1)
+    #     frame_4 = frame_4 / 255.0
+    #     label_0.append(frame_4)
+    # for i in range(11):
+    #     frame_2 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + i), 0)
+    #     frame_2 = cv2.resize(frame_2, (lenth,lenth))
+    #     frame_2 = np.array(frame_2).reshape(-1)
+    #     frame_2 = frame_2 / 255.0
+    #     us_0.append(frame_2)
+    # for i in range(11):
+    #     frame_3 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic + i), 0)
+    #     frame_3 = cv2.resize(frame_3, (lenth,lenth))
+    #     frame_3 = np.array(frame_3).reshape(-1)
+    #     frame_3 = gray2binary(frame_3)
+    #     snake_0.append(frame_3)
+    return np.array(image_out,dtype='float') , np.array(label,dtype='float')\
+        # ,np.array(us_0,dtype='float'), np.array(snake_0,dtype='float'),np.array(label_0,dtype='float')
 
 def input_norm(xs):
     fc_mean, fc_var = tf.nn.moments(
@@ -120,8 +118,8 @@ def batch_norm(Wx_plus_b,out_size):
     Wx_plus_b = tf.nn.batch_normalization(Wx_plus_b, mean, var, shift, scale, epsilon)
     return Wx_plus_b
 
-inputs_ = tf.placeholder(tf.float32, [None, 24, 24, 1])
-targets_ = tf.placeholder(tf.float32, [None, 24, 24, 1])
+inputs_ = tf.placeholder(tf.float32, [None, lenth,lenth, 1])
+targets_ = tf.placeholder(tf.float32, [None, lenth,lenth, 1])
 
 weights = {
     'in': tf.Variable(tf.random_normal([n_inputs, n_hidden_units])),
@@ -140,27 +138,27 @@ conv3 = tf.layers.conv2d(conv2, 32, (3,3), padding='same', activation=tf.nn.relu
 conv3 = tf.layers.max_pooling2d(conv3, (2,2), (2,2), padding='same')
 conv3 = batch_norm(conv3,32)
 
-conv3 = tf.reshape(conv3, [10,10,3*3*32])
+conv3 = tf.reshape(conv3, [10,10,n_inputs])
 cell = tf.contrib.rnn.BasicLSTMCell(n_hidden_units, forget_bias=1.0, state_is_tuple=True)
 init_state = cell.zero_state(10, dtype=tf.float32)
 outputs, final_state = tf.nn.dynamic_rnn(cell, conv3, initial_state=init_state, time_major=False)
 outputs = tf.unstack(tf.transpose(outputs, [1, 0, 2]))
 pred = tf.matmul(outputs[-1], weights['out']) + biases['out']
-pred = tf.reshape(pred,[10,3,3,32])
+pred = tf.reshape(pred,[10,lenth//8,lenth//8,32])
 
-conv4 = tf.image.resize_nearest_neighbor(pred, (6,6))
+conv4 = tf.image.resize_nearest_neighbor(pred, (lenth//4,lenth//4))
 conv4 = tf.layers.conv2d(conv4, 32, (3,3), padding='same', activation=tf.nn.relu)
 conv4 = batch_norm(conv4,32)
-conv5 = tf.image.resize_nearest_neighbor(conv4, (12,12))
+conv5 = tf.image.resize_nearest_neighbor(conv4, (lenth//2,lenth//2))
 conv5 = tf.layers.conv2d(conv5, 64, (3,3), padding='same', activation=tf.nn.relu)
 conv5 = batch_norm(conv5,64)
-conv6 = tf.image.resize_nearest_neighbor(conv5, (24,24))
+conv6 = tf.image.resize_nearest_neighbor(conv5, (lenth,lenth))
 conv6 = tf.layers.conv2d(conv6, 64, (3,3), padding='same', activation=tf.nn.relu)
 conv6 = batch_norm(conv6,64)
 logits_ = tf.layers.conv2d(conv6, 2, (3,3), padding='same', activation=None)
 outputs_ = tf.nn.softmax(logits_, dim= -1,name='outputs_')
 outputs_ = outputs_[:,:,:,0]
-outputs_ = tf.reshape(outputs_ , [-1,24,24,1])
+outputs_ = tf.reshape(outputs_ , [-1,lenth,lenth,1])
 
 cost = tf.reduce_mean(tf.square(tf.reshape(targets_,[-1]) - tf.reshape(outputs_,[-1])))
 # loss = tf.nn.softmax_cross_entropy_with_logits(labels=targets_, logits=outputs_)
@@ -171,10 +169,10 @@ with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
     loss_history=[]
-    for i in range(10000):
+    for i in range(10000): #10000
         batch, img = get_train_batch()
-        batch= np.reshape(batch,[-1, 24, 24, 1])
-        img= np.reshape(img,[-1, 24, 24, 1])
+        batch= np.reshape(batch,[-1, lenth,lenth, 1])
+        img= np.reshape(img,[-1,lenth,lenth, 1])
         sess.run(optimizer, feed_dict={inputs_: batch, targets_: img})
         if i % 100 == 0:
             batch_cost = sess.run(cost, feed_dict={inputs_: batch, targets_: img})
@@ -182,24 +180,30 @@ with tf.Session() as sess:
             print("Batch: {} ".format(i), "Training loss: {:.4f}".format(batch_cost))
     print("Optimization Finishes!")
 
-    batch_xs, batch_ys, us_0, snake_0, label_0 = get_test_batch()
-    batch_xs = np.reshape(batch_xs,[-1, 24, 24, 1])
-    batch_ys = np.reshape(batch_ys, [-1, 24, 24, 1])
-    image_p = sess.run(outputs_, feed_dict={inputs_: batch_xs, targets_: batch_ys})
-    # image_p = gray2binary(image_p)
-    plt.figure(0)
-    f_1, b = plt.subplots(3, 11, figsize=(11, 3))
-    for i in range(11):
-        # a[0][i].imshow(np.reshape(ys_0[i], (LONGITUDE, LONGITUDE)))
-        b[0][i].imshow(np.reshape(us_0[i], (24, 24)))
-        b[1][i].imshow(np.reshape(snake_0[i], (24, 24)))
-        b[2][10].imshow(np.reshape(image_p[0], (24, 24)))
-
-    plt.figure(1)
-    f, a = plt.subplots(3, 10, figsize=(10, 3))
-    for i in range(10):
-        #a[0][i].imshow(np.reshape(ys_0[i], (LONGITUDE, LONGITUDE)))
-        a[0][i].imshow(np.reshape(label_0[i], (24, 24)))
-        a[1][i].imshow(np.reshape(batch_ys[i], (24, 24)))
-        a[2][i].imshow(np.reshape(image_p[i], (24, 24)))
-    plt.show()
+    for i in range(600,6000,10): #[600,5996]
+        batch_xs, batch_ys= get_test_batch(i)
+        batch_xs = np.reshape(batch_xs,[-1, lenth,lenth, 1])
+        batch_ys = np.reshape(batch_ys, [-1, lenth,lenth, 1])
+        image_p = sess.run(outputs_, feed_dict={inputs_: batch_xs, targets_: batch_ys})
+        image_p = image_p*255
+        for n in range(10):
+            img = np.array(np.reshape(image_p[n], (lenth,lenth)),dtype='int32')
+            cv2.imwrite("./image_predict/%d.jpg" % (10 + i + n), img, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+        print('finished!')
+        # image_p = gray2binary(image_p)
+    # plt.figure(0)
+    # f_1, b = plt.subplots(3, 11, figsize=(11, 3))
+    # for i in range(11):
+    #     # a[0][i].imshow(np.reshape(ys_0[i], (LONGITUDE, LONGITUDE)))
+    #     b[0][i].imshow(np.reshape(us_0[i], (lenth,lenth)))
+    #     b[1][i].imshow(np.reshape(snake_0[i], (lenth,lenth)))
+    #     b[2][10].imshow(np.reshape(image_p[0], (lenth,lenth)))
+    #
+    # plt.figure(1)
+    # f, a = plt.subplots(3, 10, figsize=(10, 3))
+    # for i in range(10):
+    #     #a[0][i].imshow(np.reshape(ys_0[i], (LONGITUDE, LONGITUDE)))
+    #     a[0][i].imshow(np.reshape(label_0[i], (lenth,lenth)))
+    #     a[1][i].imshow(np.reshape(batch_ys[i], (lenth,lenth)))
+    #     a[2][i].imshow(np.reshape(image_p[i], (lenth,lenth)))
+    # plt.show()
