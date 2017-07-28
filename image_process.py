@@ -2,10 +2,10 @@ import numpy as np
 import cv2
 
 alpha = 0.5
-for n in range(610,6015):
-    img = cv2.imread('./cropedoriginalPixel2/%d.jpg' % n)
+for n in range(0,5995):
+    img = cv2.imread('./gray_snake/%d.jpg' % (n+4))
     img = np.array(img)
-    img_us = cv2.imread('./cropedoriginalUS2/%d.jpg' % n)
+    img_us = cv2.imread('./gray_us/%d.jpg' % (n+4))
     img_us = np.array(img_us)
     img[:, :, 2] = 0
     img[:, :, 0] = 0
@@ -19,7 +19,7 @@ for n in range(610,6015):
 
     im_out=np.array(img,dtype='int')
 
-    cv2.imwrite("./Snake_on_us/%d.jpg" % n, im_out)#, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+    cv2.imwrite("./SNAKEONUS/%d.jpg" % n, im_out)#, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     if n%100==0:
-        print('already done %d images in 5405' % n)
+        print('already done %d images in 5995' % n)
 print('finish!')

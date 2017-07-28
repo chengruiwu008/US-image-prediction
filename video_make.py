@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
 
-out = cv2.VideoWriter('snake_on_us.avi', -1, 20, (96,96))
+out = cv2.VideoWriter('./Video Result/US+US-pred.avi', -1, 20, (96*2,96))
 
-for i in range(610,6015):
+for i in range(0,5995):
     # get a frame
-    frame = cv2.imread("./Snake_on_us/%d.jpg" % i)
+    frame = cv2.imread("./packed_us/%d.jpg" % i)
     # save a frame
     out.write(frame)
     # show a frame
