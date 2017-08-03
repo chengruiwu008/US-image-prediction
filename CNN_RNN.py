@@ -20,10 +20,10 @@ def get_train_batch():
     #ran = np.random.randint(600,5800,size=100,dtype='int')
     image = []
     label = []
-    n_pic = np.random.randint(600,5996)
+    n_pic = np.random.randint(0,5980)
     # print(n_pic)
     for i in range(100):
-        frame_0 = cv2.imread('./cropedoriginalUS2/%d.jpg' % (n_pic + i), 0)
+        frame_0 = cv2.imread('./lzc_friendship_20170730_050909_us/%d.jpg' % (n_pic + i), 0)
         #frame_0 = add_noise(frame_0, n = noise)
         frame_0 = cv2.resize(frame_0, (lenth,lenth))
         frame_0 = np.array(frame_0).reshape(-1)
@@ -31,7 +31,7 @@ def get_train_batch():
         image.append(frame_0)
         #print(np.shape(image))
     for i in range(10):
-        frame_1 = cv2.imread('./cropedoriginalPixel2/%d.jpg' % (n_pic + 10*i +10), 0)
+        frame_1 = cv2.imread('./lzc_friendship_20170730_050909_us/%d.jpg' % (n_pic + 10*i +10), 0)
         frame_1 = cv2.resize(frame_1, (lenth,lenth))
         frame_1 = np.array(frame_1).reshape(-1)
         frame_1 = gray2binary(frame_1)
@@ -165,10 +165,14 @@ cost = tf.reduce_mean(tf.square(tf.reshape(targets_,[-1]) - tf.reshape(outputs_,
 # cost = tf.reduce_mean(loss)
 optimizer = tf.train.AdamOptimizer(0.0005).minimize(cost)
 
+all_saver = tf.train.Saver()
+saver = tf.train.import_meta_graph('./CNN_RNN/data.chkp.meta')
+
 with tf.Session() as sess:
     init = tf.global_variables_initializer()
     sess.run(init)
     loss_history=[]
+    saver.restore(sess, tf.train.latest_checkpoint('./CNN_RNN/'))
     for i in range(10000): #10000
         batch, img = get_train_batch()
         batch= np.reshape(batch,[-1, lenth,lenth, 1])
@@ -178,6 +182,7 @@ with tf.Session() as sess:
             batch_cost = sess.run(cost, feed_dict={inputs_: batch, targets_: img})
             #loss_history.append(batch_cost)
             print("Batch: {} ".format(i), "Training loss: {:.4f}".format(batch_cost))
+            all_saver.save(sess, './CNN_RNN/data.chkp')
     print("Optimization Finishes!")
 
     for i in range(600,6000,10): #[600,5996]
