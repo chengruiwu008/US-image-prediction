@@ -2,10 +2,10 @@ import numpy as np
 import cv2
 
 alpha = 0.5
-for n in range(0,8525):
-    img = cv2.imread('./lzc_friendship_20170730_050909_snake/%d.jpg' % n)#,cv2.COLOR_GRAY2BGR)
+for n in range(4,9933):
+    img = cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg' % n)#,cv2.COLOR_GRAY2BGR)
     img = np.array(img)
-    img_us = cv2.imread('./lzc_friendship_20170730_050909_us/%d.jpg' % n)#,cv2.COLOR_GRAY2BGR)
+    img_us = cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % n)#,cv2.COLOR_GRAY2BGR)
     img_us = np.array(img_us)
     #print(np.shape(img))
     img[:, :, 2] = 0
@@ -20,7 +20,7 @@ for n in range(0,8525):
 
     im_out = np.array(img, dtype='int')
 
-    cv2.imwrite("./lzc_friendship_20170730_050909_us_snake/%d.jpg" % n, im_out)#, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+    cv2.imwrite("./CNN_RNN_image_us_snake/%d.jpg" % n, im_out)#, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     if n%100==0:
-        print('already done %d images in 5990' % n)
+        print('already done %d images' % n)
 print('finish!')

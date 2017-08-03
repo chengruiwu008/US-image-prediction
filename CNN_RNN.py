@@ -162,12 +162,12 @@ conv10 = tf.layers.conv2d(conv10, 1, (5,5), padding='same', activation=None)# tf
 # print('conv10',conv10.shape)
 # outputs_ = tf.nn.softmax(logits_, dim= -1,name='outputs_')
 # outputs_ = outputs_[:,:,:,0]
-outputs_ = conv10 #tf.reshape(conv10 , [-1,lenth,lenth,1])
+outputs_ = tf.reshape(conv10 , [-1,lenth,lenth,1])
 
 cost = tf.reduce_mean(tf.square(tf.reshape(targets_,[-1]) - tf.reshape(outputs_,[-1])))
 # loss = tf.nn.softmax_cross_entropy_with_logits(labels=targets_, logits=outputs_)
 # cost = tf.reduce_mean(loss)
-optimizer = tf.train.AdamOptimizer(0.0005).minimize(cost)
+optimizer = tf.train.AdamOptimizer(0.0001).minimize(cost)
 
 all_saver = tf.train.Saver()
 saver = tf.train.import_meta_graph('./CNN_RNN/data.chkp.meta')
