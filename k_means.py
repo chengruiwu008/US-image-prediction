@@ -4,6 +4,8 @@ from numpy import array
 import cv2
 import numpy as np
 
+
+# saver = tf.train.import_meta_graph('./k-means/data.chkp.meta')
 def TFKMeansCluster(vectors, noofclusters):
     """
     K-Means Clustering using TensorFlow.
@@ -26,11 +28,11 @@ def TFKMeansCluster(vectors, noofclusters):
     graph = tf.Graph()
 
     with graph.as_default():
-
+        # all_saver = tf.train.Saver()
         # 计算的会话
 
         sess = tf.Session()
-
+        # saver.restore(sess, tf.train.latest_checkpoint('./k-means/'))
         ##构建基本的计算的元素
 
         ##首先我们需要保证每个中心点都会存在一个Variable矩阵
@@ -81,9 +83,9 @@ def TFKMeansCluster(vectors, noofclusters):
         sess.run(init_op)
 
         ##集群遍历
-
+        # all_saver.save(sess, './CNN_RNN/data.chkp')
         # 接下来在K-Means聚类迭代中使用最大期望算法。为了简单起见，只让它执行固定的次数，而不设置一个终止条件
-        noofiterations = 100
+        noofiterations = 2
         for iteration_n in range(noofiterations):
 
             ##期望步骤
@@ -121,16 +123,16 @@ def TFKMeansCluster(vectors, noofclusters):
                 print('cluster_n',cluster_n)
 
             print('iteration_n',iteration_n)
-
         # 返回中心节点和分组
         centroids = sess.run(centroids)
         assignments = sess.run(assignments)
+        # all_saver.save(sess, './CNN_RNN/data.chkp')
         return centroids, assignments
 
 def load_vector():
     list = []
-    for j in range(2,6000):
-        img = cv2.imread('./gray_us/%d.jpg' % j,0)
+    for j in range(0,300):
+        img = cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % j,0)
         #print(img)
         img = np.array(img, dtype=np.float)
         #print(np.shape(img))
@@ -139,17 +141,31 @@ def load_vector():
         len=0
         hig=0
         # load image and cut into 8*8
-        while len < lenth:
-            while hig < height:
+        for len in range(0, lenth, 8):
+            for hig in range(0,height,8):
                 roi = img[len:(len+8), hig:(hig+8)].reshape(-1)
                 list.append(np.array(roi))
-                hig+=8
-            len+=8
     return list
 
 
 vectors = load_vector()
-# print(np.shape(vectors))
-noofclusters = 100
+print(np.shape(vectors))
+noofclusters = 5000
 
-TFKMeansCluster(vectors, noofclusters)
+centroids, assignments = TFKMeansCluster(vectors, noofclusters)
+print(centroids)
+print(assignments)
+
+pre=str(centroids)
+pre=pre.replace("array","\narray")
+#pre=pre.replace("]","")+"\n"
+
+pre_1=str(centroids)
+pre_1=pre_1.replace("array","\narray")
+# pre_1=pre_1.replace("]","")+"\n"
+
+print (pre)
+with open('./k-means/centroids.txt','w') as f:
+    f.write(pre)
+with open('./k-means/assignments.txt','w') as f:
+    f.write(pre_1)

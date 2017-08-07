@@ -18,7 +18,7 @@ def mergei(files, output_file):
         i += w
     merge_img.save(output_file)
 
-for i in range(5,353):
-    files = ['./Bruce_list_1_sentence_50_9696/%d.jpg' % (i), './pred_result_challenge/%d.jpg' % i]
-    output_file = './pred_result_challenge_combine/%d.jpg' % i
+for i in range(4,9933):
+    files = ['./syf_friendship_20170731_153206_us/%d.jpg' % (i), './CNN_RNN/CNN_RNN_image_predict/%d.jpg' % i]
+    output_file = './rCNN_image_predict_US/%d.jpg' % i
     mergei(files, output_file)

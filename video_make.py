@@ -17,10 +17,10 @@ alpha = 0.5
 #             break
 #     out.release()
 # cv2.destroyAllWindows()
-out = cv2.VideoWriter('CNN_RNN_image_pred_snake.avi',cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') , 20, (96,96))
-for n in range(4,9930):
+out = cv2.VideoWriter('rCNN_image_predict_US.avi',cv2.VideoWriter_fourcc('M', 'J', 'P', 'G') , 30, (96*2,96))
+for n in range(4,9933):
         # get a frame
-    frame = cv2.imread("./CNN_RNN_image_pred_snake/%d.jpg" % n)
+    frame = cv2.imread("./rCNN_image_predict_US/%d.jpg" % n)
         # save a frame
     out.write(frame)
         # show a frame

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def loss(img_1,img_2):
     sum_ = 0.0
     for j in range(96*96):
-        sum_ =sum_ + (img_1[j]-img_2[j])**2
+        sum_ = sum_ + (img_1[j]-img_2[j])**2
     return sum_/(96*96)
 
 loss_0=[]
@@ -26,19 +26,20 @@ loss_aver_=[]
 # plt.ion()
 # plt.show()
 for i in range(4,9930):
-    image_0=cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg' % i)
+    image_0=cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % i)
     image_0 = np.array(image_0, dtype='int').reshape(-1)
-    image_1=cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg'% (i+1))
+    image_1=cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg'% (i+1))
     image_1 = np.array(image_1, dtype='int').reshape(-1)
-    image_2=cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg' % (i+2))
+    image_2=cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % (i+2))
     image_2 = np.array(image_2, dtype='int').reshape(-1)
-    image_3=cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg' % (i+3))
+    image_3=cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % (i+3))
     image_3 = np.array(image_3, dtype='int').reshape(-1)
-    image_tar=cv2.imread('./syf_friendship_20170731_153206_snake/%d.jpg' % (i+4))
+    image_tar=cv2.imread('./syf_friendship_20170731_153206_us/%d.jpg' % (i+4))
     image_tar = np.array(image_tar, dtype='int').reshape(-1)
-    image_pred=cv2.imread('./CNN_RNN_image_predict_snake_0/%d.jpg' % (i+4))
+    image_pred=cv2.imread('./CNN_RNN/CNN_RNN_image_predict/%d.jpg' % (i+4))
     image_pred = np.array(image_pred, dtype='int').reshape(-1)
-    image_aver = (image_0+image_1+image_2+image_3)/4
+    image_aver = np.array( (image_0+image_1+image_2+image_3)/4 ,dtype='int')
+    # image_aver = (image_0 + image_1 + image_2 + image_3) / 4
     # image_far = cv2.imread('./Bruce_list_1_sentence_50_9696/%d.jpg' % (i + 26))
     # image_far = np.array(image_far, dtype='int').reshape(-1)
 
@@ -88,8 +89,8 @@ for i in range(4,9930):
 
 plt.plot(loss_0_, '--b',label='loss_0')
 plt.plot(loss_1_, '--y',label='loss_1')
-plt.plot(loss_2_, '--g',label='loss_2')
-plt.plot(loss_3_, '--c',label='loss_3')
+# plt.plot(loss_2_, '--g',label='loss_2')
+# plt.plot(loss_3_, '--c',label='loss_3')
 plt.plot(loss_aver_, '-k',label='loss_aver')
 plt.plot(loss_tar_, '-r',label='loss_tar')
 
